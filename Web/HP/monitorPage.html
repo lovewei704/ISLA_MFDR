@@ -1,0 +1,25 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>即時監控</title>
+<link rel="stylesheet" type="text/css" href="design.css">
+<script src="javascript.js"></script>
+</head>
+
+<body class="all_body" ondragstart="window.event.returnValue=false" onLoad="getUserName()" style="text-align:center">
+	<div id="userName" class="userName"></div>
+	<div class="loginButtonDiv"></div><input type="button" class="loginButton" id="loginButton" value="" onClick="loginORlogout()">
+	<div id="topMenu">
+		<ul>
+			<li id="topMenu_logo"><a href="index.html"><img src="img/MFDR_logo.png" alt="MFDR" class="logo">&emsp;&emsp;&emsp;</a></li>
+			<li><a href="aboutPage.html">關於</a></li>
+			<li><a href="mapPage.html">地圖</a></li>
+			<li><a href="robotPage.html">工作指派</a></li>
+            <li class="active"><a href="monitorPage.html">即時監控</a></li>
+            <li id="editPage" style="display:none"><a href="editPage.html">編輯</a></li>
+		</ul>
+	</div><br>
+    <iframe id="monitor_iframe" src="http://192.168.43.253/"></iframe>
+</body>
+</html>

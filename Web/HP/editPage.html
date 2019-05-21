@@ -1,0 +1,391 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>資料編輯</title>
+<link rel="stylesheet" type="text/css" href="design.css">
+<script src="javascript.js"></script>
+<script src="https://code.jquery.com/jquery-1.11.3.js"></script>
+<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" type="text/css">
+<meta name="google-signin-client_id" content="631346372917-b3i922ftm6vgocktgqeijh9jbvjqfd8v.apps.googleusercontent.com">
+<script src="https://apis.google.com/js/api:client.js"></script>
+</head>
+
+<script type="text/javascript" src="./php/areaCatch.php"></script>
+<script type="text/javascript" src="./js/jquery-3.2.1.min.js"></script>
+<script type="text/javascript">
+
+//回傳資料到updateMapdata.php使其更新資料庫
+function updateMapdata() {
+   var areaID = $('#area_select').val();
+   var floor = $('#floor_select').val();
+   var description = $('#map_description').val();
+   var fileToUpload = $('#fileToUpload').val();
+   $.ajax({
+      url:"./php/updateMapdata.php",            
+      method:"get",
+      data:{
+         areaID:areaID,
+         floor:floor,
+         description:description,
+         fileToUpload:fileToUpload
+      },             
+      success:function(res){              
+        //$('#cabinet_select').html(res);
+        //alert('success'+res);
+      },
+      error:function(xhr){
+        //alert('error');
+      }
+   })//end ajax
+}
+
+//回傳資料到deleteMapdata.php使其更新資料庫
+function deleteMapdata() {
+   var areaID = $('#area_select').val();
+   var floor = $('#floor_select').val();
+   $.ajax({
+      url:"./php/deleteMapdata.php",            
+      method:"get",
+      data:{
+         areaID:areaID,
+         floor:floor
+      },             
+      success:function(res){              
+        //$('#cabinet_select').html(res);
+        //alert('success'+res);
+      },
+      error:function(xhr){
+        //alert('error');
+      }
+   })//end ajax
+}
+
+
+//回傳資料到insertMapdata.php使其更新資料庫
+function insertMapdata() {
+   var areaID = $('#insert_map_area').val();
+   var floor = $('#insert_map_floor').val();
+   var description = $('#insert_map_description').val();
+   var fileToUpload = $('#fileToUpload').val();
+   $.ajax({
+      url:"./php/insertMapdata.php",            
+      method:"get",
+      data:{
+         areaID:areaID,
+         floor:floor,
+         description:description,
+         fileToUpload:fileToUpload
+      },             
+      success:function(res){              
+        //$('#cabinet_select').html(res);
+        //alert('success'+res);
+      },
+      error:function(xhr){
+        //alert('error');
+      }
+   })//end ajax
+}
+
+//回傳資料到updateRobotdata.php使其更新資料庫
+function updateRobotdata() {
+   var areaID = $('#update_robot_area').val();
+   var floor = $('#update_robot_floor').val();
+   var robot = $('#update_robot_id').val();
+   var execution = $('#update_robot_InExecution').val();
+   $.ajax({
+      url:"./php/updateRobotdata.php",            
+      method:"get",
+      data:{
+         areaID:areaID,
+         floor:floor,
+         robot:robot,
+         execution:execution
+      },             
+      success:function(res){              
+        //$('#cabinet_select').html(res);
+        //alert('success'+res);
+      },
+      error:function(xhr){
+        //alert('error');
+      }
+   })//end ajax
+}
+
+//回傳資料到deleteRobotdata.php使其更新資料庫
+function deleteRobotdata() {
+   var areaID = $('#update_robot_area').val();
+   var floor = $('#update_robot_floor').val();
+   var robot = $('#update_robot_id').val();
+   $.ajax({
+      url:"./php/deleteRobotdata.php",            
+      method:"get",
+      data:{
+         areaID:areaID,
+         floor:floor,
+         robot:robot
+      },             
+      success:function(res){              
+        //$('#cabinet_select').html(res);
+        //alert('success'+res);
+      },
+      error:function(xhr){
+        //alert('error');
+      }
+   })//end ajax
+}
+
+//回傳資料到InsertRobotdata.php使其更新資料庫
+function InsertRobotdata() {
+   var areaID = $('#update_robot_area').val();
+   var floor = $('#update_robot_floor').val();
+   var robot = $('#Insert_robot_id').val();
+   var execution = $('#Insert_robot_InExecution').val();
+   $.ajax({
+      url:"./php/InsertRobotdata.php",            
+      method:"get",
+      data:{
+         areaID:areaID,
+         floor:floor,
+         robot:robot,
+         execution:execution
+      },             
+      success:function(res){              
+        //$('#cabinet_select').html(res);
+        //alert('success'+res);
+      },
+      error:function(xhr){
+        //alert('error');
+      }
+   })//end ajax
+}
+
+//隨著選取的選項不同，更新下拉式選單內容
+function renew(index){
+    for(var i=0;i<floor[index].length;i++)
+        document.floorControl.floor.options[i]=new Option(floor[index][i], floor[index][i]);    // 設定新選項
+    document.floorControl.floor.length=floor[index].length; // 刪除多餘的選項
+}
+
+//創建下拉式選單
+function creatOption(area)
+{
+    var areaOption = document.createElement('option');
+    areaOption.innerHTML=area;
+    areaOption.value=area;
+    document.getElementById('area_select').appendChild(areaOption);
+}
+
+//創建下拉式選單
+function creatOption_R(area)
+{
+    var areaOption = document.createElement('option');
+    areaOption.innerHTML=area;
+    areaOption.value=area;
+    document.getElementById('update_robot_area').appendChild(areaOption);
+}
+
+//隨著選取的選項不同，更新下拉式選單內容
+function renew_R(index){
+    for(var i=0;i<floor[index].length;i++)
+        document.floorControl_R.floor_R.options[i]=new Option(floor[index][i], floor[index][i]);    // 設定新選項
+    document.floorControl_R.floor_R.length=floor[index].length; // 刪除多餘的選項
+}
+</script>
+
+<script>
+    function readURL(input){
+        if(input.files && input.files[0]){
+            var imageTagID = input.getAttribute("targetID");
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                var img = document.getElementById(imageTagID);
+                img.setAttribute("src", e.target.result)
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>
+
+<body class="all_body" ondragstart="window.event.returnValue=false" onload="renew(0);getUserName(); " style="text-align:center">
+	<div id="userName" class="userName"></div>
+	<div class="loginButtonDiv"></div><input type="button" class="loginButton" id="loginButton" value="" onClick="loginORlogout()">
+	<div id="topMenu">
+		<ul>
+			<li id="topMenu_logo"><a href="index.html"><img src="img/MFDR_logo.png" alt="MFDR" class="logo">&emsp;&emsp;&emsp;</a></li>
+			<li><a href="aboutPage.html">關於</a></li>
+			<li><a href="mapPage.html">地圖</a></li>
+			<li><a href="robotPage.html">工作指派</a></li>
+            <li><a href="monitorPage.html">即時監控</a></li>
+            <li class="active" id="editPage"><a href="editPage.html">編輯</a></li>
+		</ul>
+	</div><br><br>
+    
+    <div>
+    	<input type="button" class="editBtn" id="editMapBtn" value="地圖" onMouseOver="ChangeWidthB('editMapBtn');ChangeWidthS('editRobotBtn');" onMouseOut="ChangeWidthM('editMapBtn');ChangeWidthM('editRobotBtn')" onClick="EditMap()">
+        <input type="button" class="editBtn" id="editRobotBtn" value="機器人" onMouseOver="ChangeWidthB('editRobotBtn');ChangeWidthS('editMapBtn');" onMouseOut="ChangeWidthM('editRobotBtn');ChangeWidthM('editMapBtn')" onClick="EditRobot()">
+    </div>
+    	
+    <br><br><br>
+    
+    <!-- 修改地圖資料 -->
+    <div align="center" id="editUDMapDiv">
+    	<table id="editUDMapTable">
+        	<tr>
+            	<td colspan="2">
+                <form name="floorControl">
+                	<span class="edit_location">位置：</span>
+    				<select class="map_select" onChange="renew(this.selectedIndex);" id="area_select">
+                    <script type="text/javascript">
+                        for(var j=0; j<area.length;j++)
+                            creatOption(area[j]);
+                    </script>
+                    </select>
+                    <span class="edit_location">棟&emsp;</span>
+    				<select class="map_select" name="floor" id="floor_select" onchange="">
+					<option ></option>
+					</select>
+                	<span class="edit_location">樓</span><br>
+                    <br>
+                </form>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <form action="./php/uploadImage.php" method="post" enctype="multipart/form-data">
+                        <input type="file" name="fileToUpload" id="fileToUpload" onchange="readURL(this)" targetID="editUDImg" accept="image/*" class="chooseImg">
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2"><img id="editUDImg" src="#" alt="" style="width:600px"></td>
+            </tr>
+            <tr>
+                <td class="editULMapTitle">詳細資料：</td>
+                <td><textarea id="map_description"></textarea></td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                	<input type="button" value="新&emsp;&emsp;增" id="insertMap" class="editULMapBtn" onClick="InsertMap()">
+                	<input type="submit" value="修&emsp;&emsp;改" class="editULMapBtn" onClick="RefreshPage();updateMapdata();">
+                    <input type="button" value="刪&emsp;&emsp;除" class="editULMapBtn" onClick="RefreshPage();deleteMapdata();">
+                    </form>
+                </td>
+            </tr>
+        </table>
+    </div>
+    
+    <!-- 新增地圖資料 -->
+    <div align="center" id="editIMapDiv" style="display:none">
+    	<table id="editIMapTable">
+        	<tr>
+            	<td colspan="2">
+                	<span class="edit_location">位置：</span>
+    				<input class="editIBuilding" id="insert_map_area" type="text">
+                    <span class="edit_location">棟&emsp;</span>
+    				<input class="editIBuilding" id="insert_map_floor" type="text">
+                	<span class="edit_location">樓</span><br>
+                    <br>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <form action="./php/uploadImage.php" enctype="multipart/form-data" method="post">
+                        <input type="file" name="fileToUpload" id="fileToUpload" onchange="readURL(this)" targetID="editIImg" accept="image/*" class="chooseImg">
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2"><img id="editIImg" src="#" alt="" style="width:600px"></td>
+            </tr>
+            <tr>
+                <td class="editULMapTitle">詳細資料：</td>
+                <td><textarea id="insert_map_description"></textarea></td>
+            </tr>
+            <tr style="text-align:center">
+                <td colspan="2">
+                	<input type="submit" value="新&emsp;&emsp;增" id="checkInsertMap" class="editULMapBtn" onClick="CheckInsertMap();insertMapdata();">
+                    <input type="button" value="取&emsp;&emsp;消" class="editULMapBtn" onClick="CheckInsertMap()">
+                </form>
+                </td>
+            </tr>
+        </table>
+    </div>
+    
+    <!-- 修改機器人資料 -->
+    <div align="center" id="editUDRobotDiv" style="display:none">
+        <table>
+            <tr>
+                <td colspan="4" style="text-align:center">
+                <form name="floorControl_R">
+                	<span class="edit_location">位置：</span>
+    				<select class="map_select" id="update_robot_area" onChange="renew_R(this.selectedIndex)"></select>
+                    <script type="text/javascript">
+                        for(var j=0; j<area.length;j++)
+                            creatOption_R(area[j]);
+                    </script>
+                    <span class="edit_location">棟&emsp;</span>
+    				<select class="map_select" name="floor_R" id="update_robot_floor" onchange="">
+					<option ></option>
+					</select>
+                	<span class="edit_location">樓</span>
+                </form>
+                </td>
+            </tr>
+            <tr>
+                <td><br><p class="edit_table_inforM">機器人編號</p></td>
+                <td><br><p class="edit_table_inforM">通訊狀態</p></td>
+                <td><br><p class="edit_table_inforM">任務狀態</p></td>
+                <td><br><p class="edit_table_inforM"></p></td>
+            </tr>
+            <tr>
+              <td colspan="4"><hr></td>
+            </tr>
+        </table>
+        <table>
+            <tr>
+                <td><input type="text" value="RB1" id='update_robot_id' class="edit_table_infor"></td>
+                <td><select class="edit_table_infor">
+                		<option value="1">連線</option>
+                		<option value="0">離線</option>
+                	</select></td>
+                <td><select class="edit_table_infor" id="update_robot_InExecution">
+                		<option value="1">有</option>
+                		<option value="0">無</option>
+                	</select></td>
+                <td>
+                    <p class="edit_tableULBtn">
+                    	<input type="button" value="修&nbsp;改" class="robot_chooseBtn" onClick="RefreshPage();updateRobotdata();">
+                    	<input type="button" value="刪&nbsp;除" class="robot_chooseBtn" onClick="RefreshPage();deleteRobotdata();">
+                    </p>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="4"><hr></td>
+            </tr>
+        </table>
+        <div>
+            <input id="editRobotInsert" type="submit" value="新&emsp;&emsp;增" onclick="InsertRobot()">
+            <div id="editIRobotDiv" style="display:none">
+            	<table>
+            		<tr>
+                		<td><input type="text" value="" id='Insert_robot_id' class="edit_table_infor"></td>
+                		<td><select class="edit_table_infor">
+                				<option value="1">連線</option>
+                				<option value="0">離線</option>
+                			</select></td>
+                		<td><select class="edit_table_infor" id="Insert_robot_InExecution">
+                				<option value="1">有</option>
+                				<option value="0">無</option>
+                			</select></td>
+                		<td>
+                    		<p class="edit_tableULBtn">
+                            	<input type="button" value="新&nbsp;增" class="robot_chooseBtn" onclick="CheckInsertRobot(); InsertRobotdata();">
+                    			<input type="button" value="取&nbsp;消" class="robot_chooseBtn" onclick="CheckInsertRobot()">
+                    		</p>
+                		</td>
+            		</tr>
+        		</table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

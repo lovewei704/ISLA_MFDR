@@ -1,0 +1,104 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>地圖</title>
+<link rel="stylesheet" type="text/css" href="design.css">
+<script src="javascript.js"></script>
+</head>
+
+<script type="text/javascript" src="./php/areaCatch.php"></script>
+<script type="text/javascript" src="./js/jquery-3.2.1.min.js"></script>
+<script type="text/javascript">
+
+//從areaCatch.php中獲取資料，去更新下拉式選單內容
+function renew(index){
+	for(var i=0;i<floor[index].length;i++)
+		document.floorControl.floor.options[i]=new Option(floor[index][i], floor[index][i]);	// 設定新選項
+	document.floorControl.floor.length=floor[index].length;	// 刪除多餘的選項
+}
+
+//創建下拉式選單
+function creatOption(area)
+{
+	var areaOption = document.createElement('option');
+	areaOption.innerHTML=area;
+	areaOption.value=area;
+	document.getElementById('area_select').appendChild(areaOption);
+}
+
+//先從下拉式選單中選取的內容獲取條件，再從mapCatch.php中獲取對應資料並創建地圖中名稱和詳細資料的內容
+function MapValue() {
+   var areaID = $('#area_select').val();
+   var floor = $('#floor_select').val();
+   $('#tr1').remove();
+   $('#tr2').remove();
+   $.ajax({
+      url:"./php/mapCatch.php",            
+      method:"get",
+      data:{
+         areaID:areaID,
+         floor:floor
+      },             
+      success:function(res){              
+        if(res !="")
+        {
+            var index=1;
+            var index2=2;
+            var map=JSON.parse(res);
+            var pid=map.RobotID;
+
+            $('#tr1').remove();
+            $('#tr2').remove();
+            $('#map_table').append("<tr id=tr"+index+"><td rowspan="+'2'+" width="+'800px'+" id="+'imgswitch'+"><img src="+map.location_Photo+" width="+'700px'+" alt="+''+"></td><td><br><p class="+'map_table_td_name'+">"+'名&emsp;&emsp;稱：'+"</p></td><td><br><input id="+'map_name'+" type="+'text'+" value="+map.areaID+map.floor+" readonly></td></tr>");
+            $('#map_table').append("<tr id=tr"+index2+"><td><p class="+'map_table_td_details'+">"+'詳細資料：'+"</p></td><td><br><textarea id="+'map_details'+" cols="+'10'+" readonly>"+""+map.description+""+"</textarea></td></tr>");
+        }
+      },
+      error:function(xhr){
+        alert('error');
+      }
+   })//end ajax
+}
+</script>
+
+<body class="all_body" ondragstart="window.event.returnValue=false" onload="MapValue();getUserName();assess()">
+	<div id="userName" class="userName"></div>
+	<div class="loginButtonDiv"></div><input type="button" class="loginButton" id="loginButton" value="" onClick="loginORlogout()">
+	<div id="topMenu">
+		<ul>
+			<li id="topMenu_logo"><a href="index.html"><img src="img/MFDR_logo.png" alt="MFDR" class="logo">&emsp;&emsp;&emsp;</a></li>
+			<li><a href="aboutPage.html">關於</a></li>
+			<li class="active"><a href="mapPage.html">地圖</a></li>
+			<li><a href="robotPage.html">工作指派</a></li>
+      		<li><a href="monitorPage.html">即時監控</a></li>
+      		<li id="editPage" style="display:none"><a href="editPage.html">編輯</a></li>
+		</ul>
+	</div><br>
+    <table id="map_table">
+    	<tr>
+    		<td height="100" colspan="3">
+    		<form name="floorControl">
+                <span class="map_location">位置：</span>
+    			<select class="map_select" onChange="renew(this.selectedIndex); MapValue();" id="area_select">
+			<script type="text/javascript">
+				for(var j=0; j<area.length;j++)
+					creatOption(area[j]);
+			</script>
+				</select>
+                <span class="map_location">棟&emsp;</span>
+    			<select class="map_select" name="floor" id="floor_select" onchange="MapValue();">
+				<option value="6">6</option>
+				</select>
+                <span class="map_location">樓</span><br>
+            </form>
+            </td>
+    	</tr>
+    </table>
+</body>
+
+<?php
+mysqli_close($db_link);
+?>
+
+</html>
+

@@ -1,0 +1,39 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>關於</title>
+<link rel="stylesheet" type="text/css" href="design.css">
+<script src="javascript.js"></script>
+<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" type="text/css">
+<meta name="google-signin-client_id" content="631346372917-b3i922ftm6vgocktgqeijh9jbvjqfd8v.apps.googleusercontent.com">
+<script src="https://apis.google.com/js/api:client.js"></script>
+</head>
+
+<body class="all_body" ondragstart="window.event.returnValue=false" onLoad="getUserName()">
+    <div id="userName" class="userName"></div>
+	<div class="loginButtonDiv"></div><input type="button" class="loginButton" id="loginButton" value="" onClick="loginORlogout()">
+	<div id="topMenu">
+		<ul>
+			<li id="topMenu_logo"><a href="index.html"><img src="img/MFDR_logo.png" alt="MFDR" class="logo">&emsp;&emsp;&emsp;</a></li>
+			<li class="active"><a href="aboutPage.html">關於</a></li>
+			<li><a href="mapPage.html">地圖</a></li>
+			<li><a href="robotPage.html">工作指派</a></li>
+            <li><a href="monitorPage.html">即時監控</a></li>
+            <li id="editPage" style="display:none"><a href="editPage.html">編輯</a></li>
+		</ul>
+        <div id="test"></div>
+	</div><br>
+
+	<div id="about_summary"> 
+		<h1 style="text-align:center">簡介</h1><div class="div_hr"></div>
+		<p>
+ &emsp;&emsp;現今勞工意識上升，再加上基本薪資調漲、一例一休制度啟用，資方的人力成本大幅上升，甚至直接縮減企業規模，為了節省人力成本和時間，各行各業開始有自動化取代人力的想法。市面上搬運機器人大多用於工業領域的倉儲系統，多數是依據地面所設置的軌道或標示物來進行移動，不僅多了設置軌道或標示的這道工程，視覺上也不太美觀。
+		</p>
+		<p>
+&emsp;&emsp;本專題去除傳統軌道式的移動方式，透過事先於伺服端建置好的地圖，由伺服端運算出最佳路徑，或由使用者自行規劃路線，再讓機器人依所接收到的行進路徑及目標位置，以本身所裝載的攝影機進行室內的定位、辨識所欲遞送的物品及其位置；再加上超音波感測器，進一步可以避障；攝影機配合可升降的機器手臂，機器人可以搭載電梯來進行垂直升降的移動、及置放與拿取所欲遞送的物品。
+		</p>
+	</div>
+    <!--<script src="https://apis.google.com/js/platform.js?onload=onLoad" async defer></script>-->
+</body>
+</html>

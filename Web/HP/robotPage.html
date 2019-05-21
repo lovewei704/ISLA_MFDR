@@ -1,0 +1,326 @@
+﻿<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>工作指派</title>
+<link rel="stylesheet" type="text/css" href="design.css">
+<script src="javascript.js"></script>
+</head>
+
+<script type="text/javascript" src="./php/areaCatch.php"></script>
+<script type="text/javascript" src="./js/jquery-3.2.1.min.js"></script>
+<script type="text/javascript">
+
+//讀取Html中下拉式選單選取內容，並回傳到cabinetCatch.php，再藉由cabinetCatch.php撈取資料庫內容建置下拉式選單內容
+function cabinetvalue() {
+   var areaID = $('#area_select').val();
+   var floor = $('#floor_select').val();
+   $.ajax({
+      url:"./php/cabinetCatch.php",            
+      method:"get",
+      data:{
+         areaID:areaID,
+         floor:floor
+      },             
+      success:function(res){              
+         $('#cabinet_select').html(res);
+        //alert('success'+res);
+      },
+      error:function(xhr){
+        alert('error');
+      }
+   })//end ajax
+}
+
+//讀取Html中下拉式選單選取內容，並回傳到cabinetLayersCatch.php，再藉由cabinetLayersCatch.php撈取資料庫內容建置下拉式選單內容
+function cabinetlayersvalue() {
+   var cabinetID = $('#cabinet_select').val();
+   $.ajax({
+      url:"./php/cabinetLayersCatch.php",            
+      method:"get",
+      data:{
+         cabinetID:cabinetID
+      },             
+      success:function(res){              
+         $('#cabinet_layers_select').html(res);
+        //alert('success'+res);
+      },
+      error:function(xhr){
+        alert('error');
+      }
+   })//end ajax
+}
+
+//讀取Html中下拉式選單選取內容，並回傳到cabinetCatch.php，再藉由cabinetCatch.php撈取資料庫內容建置下拉式選單內容
+function Targetcabinetvalue() {
+   var areaID = $('#area_select').val();
+   var floor = $('#TargetFloor').val();
+   $.ajax({
+      url:"./php/cabinetCatch.php",            
+      method:"get",
+      data:{
+         areaID:areaID,
+         floor:floor
+      },             
+      success:function(res){              
+         $('#TargetCabinet').html(res);
+        //alert('success'+res);
+      },
+      error:function(xhr){
+        alert('error');
+      }
+   })//end ajax
+}
+
+//讀取Html中下拉式選單選取內容，並回傳到cabinetLayersCatch.php，再藉由cabinetLayersCatch.php撈取資料庫內容建置下拉式選單內容
+function Targetcabinetlayersvalue() {
+   var cabinetID = $('#TargetCabinet').val();
+   $.ajax({
+      url:"./php/cabinetLayersCatch.php",            
+      method:"get",
+      data:{
+         cabinetID:cabinetID
+      },             
+      success:function(res){              
+         $('#TargetCabinet_Layers').html(res);
+        //alert('success'+res);
+      },
+      error:function(xhr){
+        alert('error');
+      }
+   })//end ajax
+}
+
+//將下拉式選單選取內容回傳到robotCatch.php後，接收回傳的json資料格式，再於此html創建機器人詳細資料表單
+function RobotValue() {
+   var areaID = $('#area_select').val();
+   var floor = $('#floor_select').val();
+   $('#tr1').remove();
+   $('#robot_table_loop tr td').remove();
+   $.ajax({
+      url:"./php/robotCatch.php",            
+      method:"get",
+      data:{
+         areaID:areaID,
+         floor:floor
+      },             
+      success:function(res){              
+        if(res !="")
+        {
+            var index=1;
+            var robot=JSON.parse(res);
+            var pid=robot.RobotID;
+            var robot_Execution='';
+            if(robot.InExecution==0)
+            {
+              robot_Execution='無';
+            }
+            else
+            {
+              robot_Execution='有';
+            }
+
+            $('#tr1').remove();
+            $('#robot_table_loop tr td').remove();
+            $('#robot_table_loop').append("<tr id=tr"+index+"><td><p id="+pid+" class="+'robot_table_infor'+">"+robot.RobotID+"</p></td><td><p  class="+'robot_table_infor'+">"+'尚未連線'+"</p></td><td><p  class="+'robot_table_infor'+">"+robot_Execution+"</p></td><td><p class="+'robot_table_infor'+"><button id="+pid+" class="+'robot_chooseBtn'+" onclick="+'chooseRobot("'+robot.RobotID+'");'+'chooseRobotEx("'+robot.InExecution+'");'+'sendDataToPython()'+">選&nbsp;擇</button></p></td></tr>");
+            $('#robot_table_loop').append("<tr><td colspan="+'4'+"><hr></td></tr>");
+
+        }
+      },
+      error:function(xhr){
+        alert('error');
+      }
+   })//end ajax
+}
+
+//隨著選取的選項不同，更新下拉式選單內容
+function renew(index){
+    for(var i=0;i<floor[index].length;i++)
+    {
+        document.floorControl.floor.options[i]=new Option(floor[index][i], floor[index][i]);    // 設定新選項
+        document.floorControl.TargetFloor.options[i]=new Option(floor[index][i], floor[index][i]);    // 設定新選項
+
+    }
+    document.floorControl.floor.length=floor[index].length; // 刪除多餘的選項
+    document.floorControl.TargetFloor.length=floor[index].length; // 刪除多餘的選項
+
+}
+
+//創建下拉式選單
+function creatOption(area)
+{
+    var areaOption = document.createElement('option');
+    areaOption.innerHTML=area;
+    areaOption.value=area;
+    document.getElementById('area_select').appendChild(areaOption);
+}
+
+//複製選單內容
+function setTargetArea(area)
+{
+    document.getElementById("TargetArea").innerHTML = document.getElementById("area_select").value;
+}
+
+var chooseRobotID="";
+var chooseRobotExecution="";
+
+//存取所選RobotID內容
+function chooseRobot(rid)
+{
+  chooseRobotID=rid;
+}
+
+//存取Robot執行內容
+function chooseRobotEx(rEx)
+{
+  chooseRobotExecution=rEx;
+}
+
+//輸出資料到roadCatch.php並接收回傳資料
+var sendData="";
+function sendDataToPython()
+{
+  sendData="<h1 hidden>"+chooseRobotID+"</h1>";
+  sendData+="<h2 hidden>"+chooseRobotExecution+"</h2>";
+  
+  var areaID = $('#area_select').val();
+  var floor = $('#floor_select').val();
+  var T_areaID = $('#TargetArea').val();
+  var T_floor = $('#TargetFloor').val();
+
+  $.ajax({
+      url:"./php/roadCatch.php",            
+      method:"get",
+      data:{
+         areaID:areaID,
+         floor:floor
+      },             
+      success:function(res){              
+        sendData+="<h3 hidden>"+res+"</h3>";
+        $('#sendDtoP').html(sendData);
+        //alert('success11'+sendData);
+      },
+      error:function(xhr){
+        alert('error');
+      }
+   })//end ajax
+}
+
+//輸出資料到sendCommand.php
+function sendDataToPhp()
+{
+  var jsData = sendData;
+  //alert(sendData);
+  $.ajax({
+      url:"./php/sendCommand.php",            
+      method:"get",
+      data:{
+         jsData:jsData
+      },             
+      success:function(res){              
+        //alert('success22'+res);
+      },
+      error:function(xhr){
+        alert('error');
+      }
+   })//end ajax
+}
+
+
+function assess() {
+	if(!localStorage.getItem("UserName")) {
+		window.location.assign("http://isla.shu.edu.tw:8066/gt2017/MFDR/logInPage.php");
+		localStorage.setItem("pleaseDiv", "display");
+	}
+	else {
+		sendDataToPhp();
+	}
+}
+</script>
+
+<body class="all_body" ondragstart="window.event.returnValue=false" onload="RobotValue();getUserName()">
+    <div id="userName" class="userName"></div>
+	<div class="loginButtonDiv"></div><input type="button" class="loginButton" id="loginButton" value="" onClick="loginORlogout()">
+    <div id="topMenu">
+        <ul>
+      		<li id="topMenu_logo"><a href="index.html"><img src="img/MFDR_logo.png" alt="MFDR" class="logo">&emsp;&emsp;&emsp;</a></li>
+      		<li><a href="aboutPage.html">關於</a></li>
+      		<li><a href="mapPage.html">地圖</a></li>
+      		<li class="active"><a href="robotPage.html">工作指派</a></li>
+            <li><a href="monitorPage.html">即時監控</a></li>
+            <li id="editPage" style="display:none"><a href="editPage.html">編輯</a></li>
+    	</ul>
+    </div><br>
+    
+    <table id="robot_table_top">
+        <tr>
+            <td colspan="2">
+            <form name="floorControl">
+                <span class="robot_location">物品位置：</span>
+                <select class="robot_select" onChange="renew(this.selectedIndex); setTargetArea(); cabinetvalue(); cabinetlayersvalue(); Targetcabinetvalue(); RobotValue();" id="area_select">
+            <script type="text/javascript">
+                for(var j=0; j<area.length;j++)
+                    creatOption(area[j]);
+            </script>
+                </select>
+                <span class="robot_location">棟&nbsp;</span>
+                <select class="robot_select" name="floor" id="floor_select" onchange="cabinetvalue(); RobotValue();">
+                <option value="6">6</option>
+                </select>
+                <span class="robot_location">樓&nbsp;</span>
+                <select class="robot_select" name="cabinet" id="cabinet_select" onchange="cabinetlayersvalue();">
+                    <option value="C">C</option>
+                </select>
+                <span class="robot_location">櫃台&nbsp;</span>
+                <select class="robot_select" name="cabinet_layers" id="cabinet_layers_select">
+                    <option value="1">1</option>
+                </select>
+                <span class="robot_location">層</span><br>
+            </td>
+            <td colspan="2" style="text-align: right">
+                <span class="robot_location">目的地：</span>
+                <span class="robot_location" id="TargetArea" onchange="Targetcabinetvalue(); Targetcabinetlayersvalue();">M</span>
+                <span class="robot_location">棟&nbsp;</span>
+                <select class="robot_select" name="TargetFloor" id="TargetFloor" onchange="Targetcabinetvalue(); Targetcabinetlayersvalue();">
+                    <option value="6">6</option>
+                </select>
+                <span class="robot_location">樓&nbsp;</span>
+                <select class="robot_select" name="TargetCabinet" id="TargetCabinet" onchange="Targetcabinetlayersvalue();">
+                    <option value="C">C</option>
+                </select>
+                <span class="robot_location">櫃台&nbsp;</span>
+                <select class="robot_select" name="TargetCabinet_Layers" id="TargetCabinet_Layers">
+                    <option value="1">1</option>
+                </select>
+                <span class="robot_location">層</span><br>
+            </form>
+            </td>
+        </tr>
+        <tr>
+            <td><br><p class="robot_table_inforM">機器人編號</p></td>
+            <td><br><p class="robot_table_inforM">通訊狀態</p></td>
+            <td><br><p class="robot_table_inforM">任務狀態</p></td>
+            <td><br><p class="robot_table_inforM">委派任務</p></td>
+        </tr>
+        <tr>
+          <td colspan="4"><hr></td>
+        </tr>
+    </table>
+    <table id="robot_table_loop">
+        <!--<tr>
+            <td><p class="robot_table_infor">RB1</p></td>
+            <td><p class="robot_table_infor">連線</p></td>
+            <td><p class="robot_table_infor">有</p></td>
+            <td><p class="robot_table_infor"><button class="robot_chooseBtn" disabled="disabled" onclick="">選&nbsp;擇</button></p></td>
+        </tr>
+        <tr>
+            <td colspan="4"><hr></td>
+        </tr>-->
+    </table>
+    <div>
+        <input id="robot_confirm" type="submit" value="確&emsp;&emsp;認" onclick="assess()">
+        <!--<input id="robot_confirm" type="submit" value="確&emsp;&emsp;認" onclick="sendDataToPhp();">-->
+    </div>
+    <div id="sendDtoP"></div>
+</body>
+</html>
